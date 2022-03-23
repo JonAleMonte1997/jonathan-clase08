@@ -4,6 +4,7 @@ import com.jam.desafios.desafio08.dto.GenericDto;
 import com.jam.desafios.desafio08.entity.GenericEntity;
 import com.jam.desafios.desafio08.service.GenericService;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,13 +17,6 @@ public class GenericController <T extends GenericEntity, DTO extends GenericDto<
         this.service = service;
     }
 
-    @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public T getById(@PathVariable ID id) {
-
-        return service.getById(id);
-    }
-
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public List<T> getAll() {
@@ -30,8 +24,16 @@ public class GenericController <T extends GenericEntity, DTO extends GenericDto<
         return service.getAll();
     }
 
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public T getById(@PathVariable ID id) {
+
+        return service.getById(id);
+    }
+
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public T create(@RequestBody DTO createDto) {
 
         return service.create(createDto);
@@ -39,6 +41,7 @@ public class GenericController <T extends GenericEntity, DTO extends GenericDto<
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public T update(@PathVariable ID id, @RequestBody DTO updateDto) {
 
         return service.update(id, updateDto);
@@ -46,6 +49,7 @@ public class GenericController <T extends GenericEntity, DTO extends GenericDto<
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void delete(@PathVariable ID id) {
 
         service.delete(id);

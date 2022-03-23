@@ -1,5 +1,6 @@
 package com.jam.desafios.desafio08.service;
 
+import com.jam.desafios.desafio08.enums.Status;
 import com.jam.desafios.desafio08.dto.GenericDto;
 import com.jam.desafios.desafio08.entity.GenericEntity;
 import com.jam.desafios.desafio08.repository.GenericRepository;
@@ -24,12 +25,12 @@ public class GenericService <T extends GenericEntity, DTO extends GenericDto<T>,
 
     public List<T> getAll() {
 
-        return repository.findAllByState(true);
+        return repository.findAllByStatus(Status.ENABLED);
     }
 
     public T getById(ID id){
 
-        return repository.findByIdAndState(id, true).orElseThrow(() -> new EntityNotFoundException());
+        return repository.findByIdAndStatus(id, Status.ENABLED).orElseThrow(() -> new EntityNotFoundException());
     }
 
     public T update(ID id, DTO updateDto) {
@@ -45,7 +46,7 @@ public class GenericService <T extends GenericEntity, DTO extends GenericDto<T>,
 
         T entity = getById(id);
 
-        entity.setState(false);
+        entity.setStatus(Status.DISABLED);
 
         repository.save(entity);
     }
